@@ -46,20 +46,32 @@ class MemberJpaRepositoryTest {
         assertThat(findMember1).isEqualTo(member1);
         assertThat(findMember2).isEqualTo(member2);
 
-        findMember1.setUsername("member!!!!!!!!!!");
+        //리스트 조회 검증
+        List<Member> all = memberJpaRepository.findAll();
+        assertThat(all.size()).isEqualTo(2);
 
-//        //리스트 조회 검증
-//        List<Member> all = memberJpaRepository.findAll();
-//        assertThat(all.size()).isEqualTo(2);
-//
-//        long count = memberJpaRepository.count();
-//        assertThat(count).isEqualTo(2);
-//
-//        //삭제 검증
-//        memberJpaRepository.delete(member1);
-//        memberJpaRepository.delete(member2);
-//
-//        long deletedCount = memberJpaRepository.count();
-//        assertThat(deletedCount).isEqualTo(0);
+        long count = memberJpaRepository.count();
+        assertThat(count).isEqualTo(2);
+
+        //삭제 검증
+        memberJpaRepository.delete(member1);
+        memberJpaRepository.delete(member2);
+
+        long deletedCount = memberJpaRepository.count();
+        assertThat(deletedCount).isEqualTo(0);
+    }
+
+    @Test
+    public void findByUsernameAndAgeGreaterThan() {
+        Member m1 = new Member("AAA", 10, null);
+        Member m2 = new Member("AAA", 20, null);
+        memberJpaRepository.save(m1);
+        memberJpaRepository.save(m2);
+
+        List<Member> result = memberJpaRepository.findByUsernameAndAgeGreaterThan("AAA", 15);
+
+        assertThat(result.get(0).getUsername()).isEqualTo("AAA");
+        assertThat(result.get(0).getAge()).isEqualTo(20);
+        assertThat(result.size()).isEqualTo(1);
     }
 }
