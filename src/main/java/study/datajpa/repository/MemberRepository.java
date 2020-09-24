@@ -19,4 +19,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 지워도 먼저 Named 쿼리로 찾고, 그 다음 메소드 이름으로 쿼리를 생성한다.
     // named 쿼리는 실무에서 거의 사용 X, 애플리케이션 로딩 시점에서 문법 체킹을 하는 장점이 있음
     List<Member> findByUsername(@Param("username") String username);
+
+    // 권장하는 기능
+    @Query("select m from Member m where m.username = :username and m.age = :age")
+    List<Member> findUser(@Param("username") String username, @Param("age") int age);
 }
