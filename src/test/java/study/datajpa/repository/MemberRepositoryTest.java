@@ -155,6 +155,6 @@ class MemberRepositoryTest {
 
         Optional<Member> findOptionalMember = memberRepository.findOptionalByUsername("asdafs");
         System.out.println("findOptionalMember = " + findOptionalMember); // 없을 수도 있을때는 Optional 쓰는게 낫다
-        
+
     }
 }
