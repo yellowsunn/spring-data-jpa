@@ -139,4 +139,22 @@ class MemberRepositoryTest {
             System.out.println("member = " + member);
         });
     }
+
+    @Test
+    public void returnType() {
+        Member m1 = new Member("AAA", 10, null);
+        Member m2 = new Member("BBB", 20, null);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<Member> result = memberRepository.findListByUsername("sadfasdf");
+        System.out.println("result = " + result); //존재하지 않아도 null이 아니라 빈 컨렉션
+
+        Member findMember = memberRepository.findMemberByUsername("asdfasdf");
+        System.out.println("findMember = " + findMember); //없으면 null
+
+        Optional<Member> findOptionalMember = memberRepository.findOptionalByUsername("asdafs");
+        System.out.println("findOptionalMember = " + findOptionalMember); // 없을 수도 있을때는 Optional 쓰는게 낫다
+        
+    }
 }
