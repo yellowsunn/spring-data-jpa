@@ -15,6 +15,8 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +31,7 @@ class MemberRepositoryTest {
 
     @Autowired MemberRepository memberRepository;
     @Autowired TeamRepository teamRepository;
+    @PersistenceContext EntityManager em;
 
     @Test
     public void testMember() throws Exception {
@@ -196,5 +199,27 @@ class MemberRepositoryTest {
 //        assertThat(slice.getTotalPages()).isEqualTo(2);
         assertThat(slice.isFirst()).isTrue();
         assertThat(slice.hasNext()).isTrue(); // 다음 페이지가 있냐
+    }
+
+    @Test
+    public void bulkUpdate() {
+        //given
+        memberRepository.save(new Member("member1", 10, null));
+        memberRepository.save(new Member("member2", 19, null));
+        memberRepository.save(new Member("member3", 20, null));
+        memberRepository.save(new Member("member4", 21, null));
+        memberRepository.save(new Member("member5", 40, null));
+
+        //when
+        // 주의: 벌크성 쿼리는 영속성 컨텍스트를 무시하고 DB에만 직접 날리다.
+        // @Modifying(clearAutomatically = true) 로 자동 clear
+        int resultCount = memberRepository.bulkAgePlus(20);
+
+        List<Member> result = memberRepository.findByUsername("member5");
+        Member member = result.get(0);
+        System.out.println("member = " + member);
+
+        //then
+        assertThat(resultCount).isEqualTo(3);
     }
 }
