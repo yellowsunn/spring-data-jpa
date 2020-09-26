@@ -258,4 +258,25 @@ class MemberRepositoryTest {
 
         memberRepository.findEntityGraphByUsername("member1");
     }
+
+    @Test
+    public void queryHint() {
+        Member member1 = memberRepository.save(new Member("member1", 10, null));
+        em.flush();
+        em.clear();
+
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
+        findMember.setUsername("member2"); // 변경감지 x -> update 호출 x
+
+        em.flush();
+    }
+
+    @Test
+    public void lock() {
+        Member member1 = memberRepository.save(new Member("member1", 10, null));
+        em.flush();
+        em.clear();
+
+        List<Member> result = memberRepository.findLockByUsername("member1");
+    }
 }
